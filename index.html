@@ -110,7 +110,8 @@
 </div>
 
 <script>
-  const correctPin = "3434";  // Replace with your PIN
+  // Allow multiple PINs
+  const validPins = ["3434", "8821"];   // Existing PIN + new PIN
 
   const pinOverlay = document.getElementById("pin-overlay");
   const pinInput = document.getElementById("pin-input");
@@ -124,12 +125,13 @@
 
   function handlePinSubmit() {
     const entered = pinInput.value.trim();
+
     if (!entered) {
       pinError.textContent = "Please enter a PIN.";
       return;
     }
 
-    if (entered === correctPin) {
+    if (validPins.includes(entered)) {
       unlock();
     } else {
       pinError.textContent = "Incorrect PIN.";
@@ -140,6 +142,14 @@
   pinInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") handlePinSubmit();
   });
+
+  // Auto-unlock if already validated this session
+  window.onload = function () {
+    if (sessionStorage.getItem("pinValidated") === "true") {
+      pinOverlay.style.display = "none";
+    }
+  };
+</script>
 
   // Auto-unlock if already validated this session
   window.onload = function () {
